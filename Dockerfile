@@ -29,3 +29,14 @@ RUN fix-permissions /opt/install
 USER $NB_USER
 RUN cd /opt/install && \
    conda env update -n base --file environment.yml
+
+USER root
+RUN apt-get -y update && apt-get install -y curl
+RUN curl -fsSL https://code-server.dev/install.sh | sh
+
+USER $NB_USER
+RUN cd /opt/install 
+RUN pip install jupyter-vscode-proxy
+RUN pip install jupyterlab_iframe
+RUN jupyter labextension install jupyterlab_iframe
+RUN jupyter serverextension enable --py jupyterlab_iframe
